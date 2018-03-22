@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Python for System Administrators</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono', monospace;
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Python for System Administrators
+
+---
+
+class: center, middle
+
+# A Brief History of UNIX Scripting
+
+---
+
+## Bash/Pipes
+
+Bash is the standard shell on most UNIX-based systems (Linux, MacOS, etc).
+The user can type the name of a program and Bash will execute it.
+Programs can accept additional options on the command line.
+Programs have "standard" text streams, one for data input, one for data output, and one for error output.
+The standard output of one command can be redirected to the standard input of another command.
+This allows the user to create "pipelines" for processing text.
+
+This system encouraged the creation of many small programs to "do one thing well" so they could be combined in pipelines.
+One such program is `grep`, which prints lines that match a regular expression pattern.
+
+`grep '\<c...h\>' /usr/share/dict/words`
+
+---
+
+## Sed
+
+Sed is the stream editor.
+Given editing commands on the command line, it reads standard input, performs the editing commands, ant writes the result to standard output.
+The most common command is `substitute` (abbr. `s`),
+which performs a regular expression find-and-replace.
+
+`cat /etc/passwd | sed 's/^\([^:]*\):.*:\([^:]*\)$/\1 uses shell \2\t(&)/'`
+
+---
+
+## Awk
+
+Named after the creators: Alfred Aho, Peter Weinberger, and Brian Kernighan of Bell Laboratories.
+Awk creates a C-like programming language for processing text.
+Awk reads standard input and separates it into records and fields.
+For each record, it then executes the script, supplying the fields using numbered variables.
+
+`df -h | awk '/dev\/hd/ { print $6 "\t: " $5 }'`
+
+---
+
+TODO the problem with special-purpose languages and switch to general-purpose languages
+
+---
+
+## Perl
+
+---
+
+## Typical Perl code
+
+```perl
+@P=split//,".URRUU\c8R";@d=split//,"\nrekcah xinU / lreP rehtona tsuJ";sub p{
+@p{"r$p","u$p"}=(P,P);pipe"r$p","u$p";++$p;($q*=2)+=$f=!fork;map{$P=$P[$f^ord
+($p{$_})&6];$p{$_}=/ ^$P/ix?$P:close$_}keys%p}p;p;p;p;p;map{$p{$_}=~/^[P.]/&&
+close$_}%p;wait until$?;map{/^r/&&<$_>}%p;$_=$d[$q];sleep rand(2)if/\S/;print
+```
+
+(not really)
+
+(source: https://perl.plover.com/obfuscated/)
+
+---
+
+[How to Become a Hacker](http://catb.org/esr/faqs/hacker-howto.html)
+
+---
+
+class: center, middle
+
+# Installing Python
+
+---
+
+## Installing on Windows
+
+Official website: https://www.python.org/
+
+Anaconda (recommended): https://www.anaconda.com/
+
+During install, look for and enable the option `Add Python to System PATH`.
+
+If using Anaconda, after install, create a shortcut to launch IDLE:
+1. Open the install folder (probably `C:\Anaconda`)
+2. Right-click on `pythonw.exe`
+    - Select `Send To` > `Desktop (Create Shortcut)`
+3. Right-click on the shortcut and select `Properties`
+    1. Go to the shortcut tab
+    2. Add ` -m idlelib` to the end of Target
+        - It should look something like `"C:\...\pythonw.exe" -m idlelib`
+
+---
+
+## Installing on Linux or MacOS
+
+You probably already have Python installed.
+Try opening a Terminal and type `python3`.
+You should see a message like `Python 3. ...` followed by a prompt `>>> `.
+Press `CTRL-D` to close it.
+
+Also check that you have IDLE.
+In the terminal, run `idle3`.
+On some Linux distros, IDLE might be a separate package.
+Install it with something like `apt install idle3`.
+This will also add a launcher icon to your application menu.
+
+On MacOS, if you want a launcher icon, you must download Python from https://www.python.org/ and install it.
+This means you may have two different versions of Python installed.
+This shouldn't be an issue.
+
+---
+
+class: center, middle
+
+# Basics
+
+---
+
+## A Basic Python Script
+
+```python
+print('Hello, world!')
+*name = input("What is your name? ")
+print("Hello", name)
+```
+
+---
+
+## Using the Python Shell
+
+```python
+$ python3
+Python 3.4.3 (default, Nov 28 2017, 16:41:13) 
+[GCC 4.8.4] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> x = 4
+>>> x = 'hi'
+>>> x
+'hi'
+>>> x.upper()
+'HI'
+>>> x = 4
+>>> x.upper()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'int' object has no attribute 'upper'
+>>> x = 'hi'
+>>> type(x)
+<class 'str'>
+>>> dir(x)
+[...]
+>>> help(x.upper)
+```
+
+---
+
+## Base Types
+
+- int
+- float
+- str
+
+---
+
+## String Literals
+
+```python
+>>> "the quote doesn't need to be escaped"
+"the quote doesn't need to be escaped"
+>>> 'The "quotes" do not need to be escaped'
+'The "quotes" do not need to be escaped'
+>>> 'when there\'s more than "one", use \\'
+'when there\'s more than "one", use \\'
+>>> '''
+... adf
+... '''
+'\nadf\n'
+
+```
+
+TODO raw strings
+
+---
+
+## Docstrings
+
+TODO
+
+---
+
+## Booleans
+
+```python
+>>> True
+True
+>>> False
+False
+>>> None
+>>> print(None)
+None
+```
+
+---
+
+## If Statements
+
+```python
+if condition:
+    pass
+elif condition:
+    pass
+else:
+    pass
+```
+
+---
+
+## While Statements
+
+```python
+while condition:
+    pass
+```
+
+---
+
+## Lists
+
+TODO
+
+---
+
+## Tuples
+
+TODO
+
+packing/unpacking
+
+---
+
+## Dictionaries
+
+TODO
+
+---
+
+## Functions
+
+```python
+def function(args):
+    pass
+```
+
+By default, functions automatically return `None`
+
+---
+
+## Default Parameters
+
+---
+
+## Keyword Arguments
+
+---
+
+## Arbitrary Argument Lists
+
+---
+
+## Unpacking Argument Lists
+
+---
+
+## Modules
+
+---
+
+## Script/Module
+
+---
+
+## Making a Script Executable
+
+`chmod +x`
+
+`$ which python3`
+
+`#!/usr/bin/python3`
+
+`#!/usr/bin/env python3`
+
+---
+
+## Docstrings and Doctest
+
+---
+
+## Basic Script
+
+```python
+#!/usr/bin/env python3
+
+# import statements
+
+# function definitions
+
+if __name__ == '__main__':
+    # main/script code, or
+    import doctest
+    doctest.testmod()
+
+```
+
+---
+
+class: center, middle
+
+# Working With Files
+
+---
+
+open, read
+
+---
+
+open, readlines
+
+---
+
+open, for loop
+
+---
+
+## With Statement
+
+---
+
+writing to a file
+
+---
+
+text mode vs binary mode
+
+---
+
+unicode encoding and decoding
+
+---
+
+class: center, middle
+
+# Operating System Modules
+
+---
+
+sys, sys.argv, sys.std{in,out,err}, sys.path
+
+---
+
+os.path, posixpath/ntpath
+
+---
+
+os, os.environ, file functions
+chdir
+listdir
+mkdir/makedirs
+remove/removedirs/rmdir
+rename
+stat
+walk
+
+```python
+result = os.stat('.')
+result.st_size
+result.st_rsize
+result.st_atime
+result.st_mtime
+result.st_type
+```
+
+---
+
+shutil
+
+---
+argparse
+---
+cmd
+---
+subprocess
+---
+
+class: center, middle
+
+# Text Modules
+
+---
+re
+---
+TODO check others
+---
+
+class: center, middle
+
+# Utility Modules
+
+---
+math
+---
+pprint
+---
+
+class: center, middle
+
+# File Format Modules
+
+---
+csv
+---
+configparser
+---
+json
+---
+sqlite3
+---
+
+class: center, middle
+
+# Networking Modules
+
+---
+urllib
+---
+
+Others
+
+readline
+datetime
+collections
+random
+fileinput
+glob
+pickle/shelve
+Compression and Archiving
+logging
+curses
+tk
+uuid
+smtp
+ctypes
+
+---
+
+class: center, middle
+
+# Virtual Environments
+
+---
+
+class: center, middle
+
+# Pip
+
+---
+
+class: center, middle
+
+# Popular Third-Party Modules
+
+---
+flask
+---
+sqlalchemy
+---
+pil
+---
+bs4
+---
+matplotlib
+---
+requests
+---
+
+# References
+
+- https://www.linuxjournal.com/content/python-scripts-replacement-bash-utility-scripts
+- [Professional System Administration with Python](http://sysadminpy.com/)
+- OReilly - Python for Unix and Linux System Administration
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-0.14.1.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({'highlightLines': true});
+    </script>
+  </body>
+</html>
