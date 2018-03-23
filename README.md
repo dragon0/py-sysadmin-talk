@@ -2,7 +2,7 @@
 
 Presentation and code on Python for system administrators.
 
-https://dragon0.github.io/py-sysadmin-talk/slides.html
+[slides](https://dragon0.github.io/py-sysadmin-talk/slides)
 
 ## See also
 
